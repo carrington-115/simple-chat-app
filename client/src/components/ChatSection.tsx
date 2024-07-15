@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { io } from "socket.io-client";
 import "./chats.css";
 
 interface messageType {
@@ -7,11 +8,26 @@ interface messageType {
 }
 
 const ChatSection = () => {
+  const socket = io("localhost:5000");
   const [initialMessage, setInitialMessage] = useState<messageType>({
     title: "Chat Application",
     description:
       "A test chat application with reactjs on the frontend and nodejs, socket on the backend",
   });
+  const [messageInput, setMessageInput] = useState<string>("");
+  const [socketStatus, setSocketStatus] = useState<boolean>(false);
+
+  const handleSendMessage = () => {};
+  const connectSocket = () => {
+    socket.on("connect", () => {
+      console.log(socket);
+    });
+  };
+
+  useEffect(() => {
+    connectSocket();
+  }, []);
+
   return (
     <main>
       <section className="messages">
@@ -21,13 +37,18 @@ const ChatSection = () => {
         </section>
       </section>
 
-      <form
-        className="input-entry-point"
-        onSubmit={(e) => e.preventDefault()}
-        action=""
-      >
-        <input type="text" placeholder="Enter your message" />
-        <button type="submit" className="send-message-btn">
+      <form className="input-entry-point" onSubmit={(e) => e.preventDefault()}>
+        <input
+          type="text"
+          placeholder="Enter your message"
+          value={messageInput}
+          onChange={(e) => setMessageInput(e.target.value)}
+        />
+        <button
+          type="submit"
+          className="send-message-btn"
+          onClick={handleSendMessage}
+        >
           <span className="material-symbols-outlined">send</span>
         </button>
       </form>
