@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { io } from "socket.io-client";
 import "./chats.css";
 
 interface messageType {
@@ -8,7 +7,6 @@ interface messageType {
 }
 
 const ChatSection = () => {
-  const socket = io("localhost:5000");
   const [initialMessage, setInitialMessage] = useState<messageType>({
     title: "Chat Application",
     description:
@@ -18,15 +16,6 @@ const ChatSection = () => {
   const [socketStatus, setSocketStatus] = useState<boolean>(false);
 
   const handleSendMessage = () => {};
-  const connectSocket = () => {
-    socket.on("connect", () => {
-      console.log(socket);
-    });
-  };
-
-  useEffect(() => {
-    connectSocket();
-  }, []);
 
   return (
     <main>
