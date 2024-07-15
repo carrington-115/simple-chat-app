@@ -1,16 +1,11 @@
 import { useEffect } from "react";
 import "./App.css";
 import { ChatSection, Sidebar } from "./components";
-import io from "socket.io-client";
+import { connectToSocket, socket } from "./socket";
+
 function App() {
-  const socket = io("http://localhost:5000");
-  const connectSocket = () => {
-    socket.on("connect", () => {
-      console.log(socket);
-    });
-  };
   useEffect(() => {
-    connectSocket();
+    connectToSocket();
   }, []);
   return (
     <div className="App">
