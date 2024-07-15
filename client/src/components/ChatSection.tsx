@@ -1,5 +1,7 @@
+import "./chats.css";
+
 const ChatSection = () => {
-  return <div>ChatSection</div>;
+  return <main>ChatSection</main>;
 };
 
 export default ChatSection;
