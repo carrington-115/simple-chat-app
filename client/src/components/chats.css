@@ -1,7 +1,6 @@
 main {
   width: 80%;
   height: 100vh;
-  border: 1px solid white;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -70,11 +69,11 @@ main {
   box-sizing: border-box;
 }
 .message-inner-container .message-container {
-  padding: 20px;
+  padding: 12px 24px;
   color: white;
   background-color: rgba(255, 255, 255, 0.1);
   max-width: 50%;
   align-self: flex-end;
   margin: 20px 20px 0 0;
-  border-radius: 20px;
+  border-radius: 16px;
 }

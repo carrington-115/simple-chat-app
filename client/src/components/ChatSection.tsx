@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./chats.css";
 import { socket } from "../socket";
 
@@ -16,6 +16,7 @@ const ChatSection = () => {
   const [messageInput, setMessageInput] = useState<string>("");
   const [messages, setMessages] = useState<string[]>([]);
   const [messageStatus, setMessageStatus] = useState<boolean>(false);
+  const messagesRef = useRef<HTMLElement>(null);
 
   const getSocketMessages = () => {
     socket.on("message", (data) => {
@@ -26,14 +27,19 @@ const ChatSection = () => {
   };
 
   const handleSendMessage = () => {
-    socket.emit("message", messageInput);
-    setMessageInput("");
-    getSocketMessages();
+    if (messageInput !== "") {
+      socket.emit("message", messageInput);
+      setMessageInput("");
+      getSocketMessages();
+    }
   };
 
   useEffect(() => {
     if (messages.length > 0) {
       setMessageStatus(true);
+    }
+    if (messagesRef.current) {
+      messagesRef.current.scrollBy(0, messagesRef.current.scrollHeight);
     }
   }, [messageStatus, messages]);
 
@@ -41,7 +47,7 @@ const ChatSection = () => {
     <main>
       <section className="messages">
         {messageStatus ? (
-          <section className="message-inner-container">
+          <section className="message-inner-container" ref={messagesRef}>
             {messages.map((props, index) => (
               <div className="message-container" key={index}>
                 {props}
