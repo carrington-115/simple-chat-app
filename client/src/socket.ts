@@ -5,6 +5,8 @@ export const socket = io("http://localhost:5000", {
 
 export const connectToSocket = () => {
   socket.on("connect", () => {
-    console.log(socket);
+    console.log(
+      `${socket.connected ? "socket is connected" : "socket is not connected"}`
+    );
   });
 };

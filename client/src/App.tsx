@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import "./App.css";
 import { ChatSection, Sidebar } from "./components";
-import { connectToSocket, socket } from "./socket";
+import { connectToSocket } from "./socket";
 
 function App() {
   useEffect(() => {

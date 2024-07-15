@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./chats.css";
+import { socket } from "../socket";
 
 interface messageType {
   title: string;
@@ -13,17 +14,46 @@ const ChatSection = () => {
       "A test chat application with reactjs on the frontend and nodejs, socket on the backend",
   });
   const [messageInput, setMessageInput] = useState<string>("");
-  const [socketStatus, setSocketStatus] = useState<boolean>(false);
+  const [messages, setMessages] = useState<string[]>([]);
+  const [messageStatus, setMessageStatus] = useState<boolean>(false);
 
-  const handleSendMessage = () => {};
+  const getSocketMessages = () => {
+    socket.on("message", (data) => {
+      console.log(data);
+      console.log(messages);
+      setMessages(data);
+    });
+  };
+
+  const handleSendMessage = () => {
+    socket.emit("message", messageInput);
+    setMessageInput("");
+    getSocketMessages();
+  };
+
+  useEffect(() => {
+    if (messages.length > 0) {
+      setMessageStatus(true);
+    }
+  }, [messageStatus, messages]);
 
   return (
     <main>
       <section className="messages">
-        <section className="top-message">
-          <h1>{initialMessage.title}</h1>
-          <p>{initialMessage.description}</p>
-        </section>
+        {messageStatus ? (
+          <section className="message-inner-container">
+            {messages.map((props, index) => (
+              <div className="message-container" key={index}>
+                {props}
+              </div>
+            ))}
+          </section>
+        ) : (
+          <section className="top-message">
+            <h1>{initialMessage.title}</h1>
+            <p>{initialMessage.description}</p>
+          </section>
+        )}
       </section>
 
       <form className="input-entry-point" onSubmit={(e) => e.preventDefault()}>
@@ -34,7 +64,7 @@ const ChatSection = () => {
           onChange={(e) => setMessageInput(e.target.value)}
         />
         <button
-          type="submit"
+          type="button"
           className="send-message-btn"
           onClick={handleSendMessage}
         >

@@ -9,9 +9,13 @@ const socket = new Server(server, {
     credentials: true,
   },
 });
-
+const messages = [];
 socket.on("connection", (socket) => {
   console.log(`${socket.id} is connected`);
+  socket.on("message", (message) => {
+    messages.push(message);
+    socket.emit("message", messages);
+  });
 });
 
 server.listen(process.env.PORT, () => {

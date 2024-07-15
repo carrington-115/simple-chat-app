@@ -61,3 +61,20 @@ main {
 .top-message p {
   color: grey;
 }
+
+.message-inner-container {
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  overflow-y: scroll;
+  box-sizing: border-box;
+}
+.message-inner-container .message-container {
+  padding: 20px;
+  color: white;
+  background-color: rgba(255, 255, 255, 0.1);
+  max-width: 50%;
+  align-self: flex-end;
+  margin: 20px 20px 0 0;
+  border-radius: 20px;
+}
