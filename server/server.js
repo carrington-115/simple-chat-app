@@ -21,10 +21,6 @@ io.on("connection", (socket) => {
     messages.push({ id: socket.id.substring(0, 5), message: message });
     io.emit("message", messages);
   });
-
-  socket.on("disconnect", (data) => {
-    socket.broadcast.emit("disconnect", `${data} is disconnected`);
-  });
 });
 
 server.listen(process.env.PORT, () => {

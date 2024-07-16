@@ -62,7 +62,6 @@ const ChatSection = () => {
       messagesRef.current.scrollBy(0, messagesRef.current.scrollHeight);
     }
     getSocketMessages();
-
     socket.on("user", (data) => {
       setActivityContent(data);
     });
