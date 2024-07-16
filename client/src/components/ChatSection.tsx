@@ -20,9 +20,7 @@ const ChatSection = () => {
 
   const getSocketMessages = () => {
     socket.on("message", (data) => {
-      console.log(data);
-      console.log(messages);
-      setMessages(data);
+      setMessages((prev) => [...prev, data]);
     });
   };
 
@@ -30,8 +28,12 @@ const ChatSection = () => {
     if (messageInput !== "") {
       socket.emit("message", messageInput);
       setMessageInput("");
-      getSocketMessages();
     }
+  };
+
+  const handleOnSubmitMessage = (e: any) => {
+    e.preventDefault();
+    handleSendMessage();
   };
 
   useEffect(() => {
@@ -41,6 +43,11 @@ const ChatSection = () => {
     if (messagesRef.current) {
       messagesRef.current.scrollBy(0, messagesRef.current.scrollHeight);
     }
+    getSocketMessages();
+
+    return () => {
+      socket.off("message");
+    };
   }, [messageStatus, messages]);
 
   return (
@@ -62,7 +69,7 @@ const ChatSection = () => {
         )}
       </section>
 
-      <form className="input-entry-point" onSubmit={(e) => e.preventDefault()}>
+      <form className="input-entry-point" onSubmit={handleOnSubmitMessage}>
         <input
           type="text"
           placeholder="Enter your message"
@@ -70,7 +77,7 @@ const ChatSection = () => {
           onChange={(e) => setMessageInput(e.target.value)}
         />
         <button
-          type="button"
+          type="submit"
           className="send-message-btn"
           onClick={handleSendMessage}
         >

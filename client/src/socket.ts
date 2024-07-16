@@ -8,5 +8,6 @@ export const connectToSocket = () => {
     console.log(
       `${socket.connected ? "socket is connected" : "socket is not connected"}`
     );
+    console.log(`user is ${socket.id}`);
   });
 };
