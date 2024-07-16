@@ -2,18 +2,22 @@ require("dotenv").config({ path: ".env" });
 const { createServer } = require("http");
 const { Server } = require("socket.io");
 const server = createServer();
-const socket = new Server(server, {
+const io = new Server(server, {
   cors: {
     origin: "http://localhost:3000",
     methods: ["GET", "POST"],
     credentials: true,
   },
 });
-socket.on("connection", (socket) => {
+
+const messages = [];
+
+io.on("connection", (socket) => {
   console.log(`${socket.id} is connected`);
   socket.on("message", (message) => {
     console.log(`${socket.id} has send message`);
-    socket.emit("message", message);
+    messages.push({ id: socket.id.substring(0, 5), message: message });
+    io.emit("message", messages);
   });
 });
 

@@ -3,8 +3,11 @@ import "./chats.css";
 import { socket } from "../socket";
 
 interface messageType {
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
+  id?: string;
+  message?: string;
+  author?: boolean;
 }
 
 const ChatSection = () => {
@@ -14,13 +17,26 @@ const ChatSection = () => {
       "A test chat application with reactjs on the frontend and nodejs, socket on the backend",
   });
   const [messageInput, setMessageInput] = useState<string>("");
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<messageType[]>([]);
   const [messageStatus, setMessageStatus] = useState<boolean>(false);
   const messagesRef = useRef<HTMLElement>(null);
+  const socketId: string | undefined = socket.id?.substring(0, 5);
 
   const getSocketMessages = () => {
     socket.on("message", (data) => {
-      setMessages((prev) => [...prev, data]);
+      data.forEach(({ id, message }: { id: string; message: string }) => {
+        if (id === socketId) {
+          setMessages((prev) => [
+            ...prev,
+            { id: id, message: message, author: true },
+          ]);
+        } else {
+          setMessages((prev) => [
+            ...prev,
+            { id: id, message: message, author: false },
+          ]);
+        }
+      });
     });
   };
 
@@ -55,9 +71,22 @@ const ChatSection = () => {
       <section className="messages">
         {messageStatus ? (
           <section className="message-inner-container" ref={messagesRef}>
-            {messages.map((props, index) => (
-              <div className="message-container" key={index}>
-                {props}
+            {messages.map(({ id, message, author }, index) => (
+              <div
+                style={{
+                  alignSelf: `${author ? "flex-end" : "flex-start"}`,
+                  color: `${author ? "white" : "white"}`,
+                  backgroundColor: `${
+                    author
+                      ? "rgba(255, 255, 255, 0.25)"
+                      : "rgba(255, 255, 255, 0.1)"
+                  }`,
+                }}
+                className="message-container"
+                key={index}
+              >
+                <p>{message}</p>
+                <span>From: {id}</span>
               </div>
             ))}
           </section>
