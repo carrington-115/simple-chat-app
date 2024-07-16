@@ -13,11 +13,17 @@ const io = new Server(server, {
 const messages = [];
 
 io.on("connection", (socket) => {
-  console.log(`${socket.id} is connected`);
+  console.log(`${socket} is connected`);
+  socket.broadcast.emit("user", `${socket.id.substring(0, 5)} is connected`);
+
   socket.on("message", (message) => {
     console.log(`${socket.id} has send message`);
     messages.push({ id: socket.id.substring(0, 5), message: message });
     io.emit("message", messages);
+  });
+
+  socket.on("disconnect", (data) => {
+    socket.broadcast.emit("disconnect", `${data} is disconnected`);
   });
 });
 

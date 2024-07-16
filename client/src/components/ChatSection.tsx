@@ -16,6 +16,8 @@ const ChatSection = () => {
     description:
       "A test chat application with reactjs on the frontend and nodejs, socket on the backend",
   });
+  const [activityContent, setActivityContent] =
+    useState<string>("Chat Application");
   const [messageInput, setMessageInput] = useState<string>("");
   const [messages, setMessages] = useState<messageType[]>([]);
   const [messageStatus, setMessageStatus] = useState<boolean>(false);
@@ -61,6 +63,10 @@ const ChatSection = () => {
     }
     getSocketMessages();
 
+    socket.on("user", (data) => {
+      setActivityContent(data);
+    });
+
     return () => {
       socket.off("message");
     };
@@ -68,6 +74,7 @@ const ChatSection = () => {
 
   return (
     <main>
+      <section className="activity-section">{activityContent}</section>
       <section className="messages">
         {messageStatus ? (
           <section className="message-inner-container" ref={messagesRef}>
